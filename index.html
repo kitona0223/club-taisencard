@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLUB&#x20;TAISENCARD</title>
+    <link rel="apple-touch-icon" href="icon.png">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 { font-size: 20px; color: #1a365d; margin-bottom: 20px; }
+        
+        /* 入力エリア */
+        .input-area {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto 30px auto;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        label { font-weight: bold; font-size: 14px; }
+        input {
+            width: 65%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 📸 カメラ撮影用の表示エリア */
+        .display-area {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 40px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+            max-width: 500px;
+            margin: 0 auto 50px auto;
+            transition: all 0.3s ease;
+        }
+        .match-num {
+            font-size: 26px;
+            color: #fbd38d;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        .teams {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 42px;
+            font-weight: bold;
+        }
+        .vs {
+            font-size: 24px;
+            color: #a0aec0;
+            padding: 0 15px;
+            flex-shrink: 0;
+        }
+        
+        /* 縦画面時のチーム名表示（2行折り返し） */
+        .team-container {
+            flex: 1;
+            width: 42%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 1.2em;
+            overflow: visible;
+        }
+        .team-name {
+            word-break: break-all;
+            line-height: 1.1;
+            display: inline-block;
+            white-space: normal;
+        }
+
+        /* 🔄 スマホを横向きにしたときの表示（横画面専用フィット処理） */
+        @media (orientation: landscape) {
+            body {
+                padding: 0;
+                background-color: #0f172a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+            h1, .input-area {
+                display: none !important;
+            }
+            .display-area {
+                max-width: 100%;
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 0;
+                margin: 0;
+                transform: translateY(-15vh);
+            }
+            .match-num {
+                font-size: 8vh;
+                margin-bottom: 3vh;
+            }
+            .teams {
+                padding: 0 2vw;
+                width: 100vw;
+                box-sizing: border-box;
+            }
+            .vs {
+                font-size: 8vh;
+                padding: 0 2vw;
+            }
+            .team-container {
+                width: 40vw;
+            }
+            /* ✨ 横画面時は絶対1行＆自動ジャストサイズ計算 */
+            .team-name {
+                white-space: nowrap !important;
+                font-size: 13vh; /* 基本最大サイズ */
+            }
+        }
+
+        /* ☕️ 縦画面のときだけ浮いて表示される応援ボタン */
+        .bmc-container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+        }
+        .bmc-button {
+            display: inline-block;
+            background-color: #ffdd00;
+            color: #000000;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+        @media (orientation: landscape) {
+            .bmc-container {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🤾‍♂️ クラブ対戦カード 🤾‍♀️</h1>
+
+    <div class="input-area">
+        <div class="input-group">
+            <label for="matchInput">試合番号:</label>
+            <input type="text" id="matchInput" value="第1試合">
+        </div>
+        <div class="input-group">
+            <label for="teamAInput">チームA:</label>
+            <input type="text" id="teamAInput" placeholder="例: ひまわり">
+        </div>
+        <div class="input-group">
+            <label for="teamBInput">チームB:</label>
+            <input type="text" id="teamBInput" placeholder="例: こすもす">
+        </div>
+        <button onclick="updateCard()">画面を更新する</button>
+    </div>
+
+    <div class="display-area">
+        <div id="matchDisplay" class="match-num">第1試合</div>
+        <div class="teams">
+            <div class="team-container"><div id="teamADisplay" class="team-name">チームA</div></div>
+            <div class="vs">VS</div>
+            <div class="team-container"><div id="teamBDisplay" class="team-name">チームB</div></div>
+        </div>
+    </div>
+
+    <!-- ☕️ 投げ銭・応援ボタン -->
+    <div class="bmc-container">
+        <a href="https://www.buymeacoffee.com/ororon" target="_blank" rel="noopener noreferrer" class="bmc-button">
+            ☕️ 開発者を応援する
+        </a>
+    </div>
+
+    <script>
+        function updateCard() {
+            const matchTxt = document.getElementById('matchInput').value;
+            const teamATxt = document.getElementById('teamAInput').value || 'チームA';
+            const teamBTxt = document.getElementById('teamBInput').value || 'チームB';
+
+            document.getElementById('matchDisplay').innerText = matchTxt;
+            
+            const elA = document.getElementById('teamADisplay');
+            const elB = document.getElementById('teamBDisplay');
+            
+            elA.innerText = teamATxt;
+            elB.innerText = teamBTxt;
+
+            // 画面反映・リサイズに合わせてサイズ調整
+            fitTeamNames();
+
+            document.getElementById('teamAInput').value = '';
+            document.getElementById('teamBInput').value = '';
+        }
+
+        // ✨ 横画面のときだけ、文字が枠からはみ出さないよう1ピクセル単位で自動縮小する処理
+        function fitTeamNames() {
+            const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+            
+            ['teamADisplay', 'teamBDisplay'].forEach(id => {
+                const el = document.getElementById(id);
+                const container = el.parentElement;
+
+                if (isLandscape) {
+                    // 横画面の処理：1行固定で枠に収まるまでフォントサイズを下げる
+                    let fontSize = window.innerHeight * 0.13; // 最大 13vh
+                    el.style.fontSize = fontSize + 'px';
+
+                    // 枠を超えている間、小さくする
+                    while (el.scrollWidth > container.clientWidth && fontSize > 10) {
+                        fontSize -= 1;
+                        el.style.fontSize = fontSize + 'px';
+                    }
+                } else {
+                    // 縦画面の処理：元のスタイル（自動改行）に戻す
+                    el.style.fontSize = '';
+                }
+            });
+        }
+
+        // 画面の向きが変わったときやリサイズ時にも自動計算
+        window.addEventListener('resize', fitTeamNames);
+        window.addEventListener('orientationchange', fitTeamNames);
+    </script>
+
+</body>
+</html>

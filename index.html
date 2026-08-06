@@ -146,13 +146,13 @@
             font-weight: 900;
         }
 
-        /* 🔄 スマホを横向きにしたときの表示（強制的上寄せ設定） */
+        /* 🔄 スマホを横向きにしたときの表示 */
         @media (orientation: landscape) {
             body {
                 padding: 0;
                 background-color: #000000;
                 display: flex;
-                align-items: flex-start; /* ✨ 画面上端から配置する */
+                align-items: flex-start;
                 justify-content: center;
                 height: 100vh;
                 overflow: hidden;
@@ -176,14 +176,13 @@
                 justify-content: flex-start;
                 align-items: center;
                 
-                /* ✨ ここで上からの位置を調整します（5vh = 画面の高さの5%分だけ上から離す） */
                 margin-top: 15vh; 
                 padding: 0;
             }
 
             .match-num {
                 font-size: 8vh;
-                margin-bottom: 3vh;
+                margin-bottom: 10vh; 
             }
 
             .teams {
@@ -299,7 +298,7 @@
             fitTeamNames();
         }
 
-        // 🛡️ 文字サイズ調整処理
+        // 🛡️ それぞれ独立した文字サイズ調整処理
         function fitTeamNames() {
             const isLandscape = window.matchMedia("(orientation: landscape)").matches;
             
@@ -309,269 +308,18 @@
             if (!elA || !elB) return;
 
             if (isLandscape) {
+                // 初期サイズ設定 (12vh)
                 const initialSize = Math.max(12, window.innerHeight * 0.12);
                 elA.style.fontSize = initialSize + 'px';
                 elB.style.fontSize = initialSize + 'px';
 
+                // ✨ それぞれ個別に枠に収まるサイズを計算して適用
                 const sizeA = calculateFitSize(elA);
                 const sizeB = calculateFitSize(elB);
 
-                let finalSize = Math.min(sizeA, sizeB);
-                if (finalSize < 12) finalSize = 12;
-
-                elA.style.fontSize = finalSize + 'px';
-                elB.style.fontSize = finalSize + 'px';<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLUB TAISENCARD</title>
-    <link rel="apple-touch-icon" href="icon.png">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #0f172a;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        h1 { font-size: 20px; color: #f8fafc; margin-bottom: 20px; }
-        
-        /* 📝 入力エリア */
-        .input-area {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            max-width: 420px;
-            margin: 0 auto 30px auto;
-            border: 1px solid #334155;
-        }
-
-        .input-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        label { font-weight: bold; font-size: 14px; color: #cbd5e1; }
-
-        input {
-            width: 65%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            background-color: #0f172a;
-            color: #ffffff;
-            outline: none;
-        }
-
-        /* 🔘 ボタン配置 */
-        .btn-group-sub {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .btn-sub {
-            flex: 1;
-            background-color: #475569;
-            color: #ffffff;
-            border: none;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-sub:active {
-            background-color: #334155;
-        }
-
-        .btn-main {
-            width: 100%;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-main:active {
-            transform: scale(0.98);
-        }
-
-        /* 📸 カメラ撮影用の表示エリア */
-        .display-area {
-            background-color: #1e293b;
-            color: #ffffff;
-            padding: 30px 15px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            max-width: 500px;
-            margin: 0 auto;
-            border: 1px solid #334155;
-        }
-
-        .match-num {
-            font-size: 26px;
-            color: #f59e0b;
-            font-weight: bold;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        .teams {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-        }
-
-        .vs {
-            font-size: 24px;
-            color: #94a3b8;
-            padding: 0 10px;
-            flex-shrink: 0;
-            font-weight: 900;
-            font-style: italic;
-        }
-        
-        .team-container {
-            flex: 1;
-            width: 42%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 1.2em;
-            overflow: hidden;
-        }
-
-        .team-name {
-            word-break: break-all;
-            line-height: 1.1;
-            display: inline-block;
-            white-space: normal;
-            font-size: 32px;
-            font-weight: 900;
-        }
-
-        /* 🔄 スマホを横向きにしたときの表示 */
-        @media (orientation: landscape) {
-            body {
-                padding: 0;
-                background-color: #000000;
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
-                height: 100vh;
-                overflow: hidden;
-            }
-
-            h1, .input-area {
-                display: none !important;
-            }
-
-            .display-area {
-                max-width: 100vw;
-                width: 100vw;
-                height: auto;
-                border-radius: 0;
-                box-shadow: none;
-                border: none;
-                background-color: #000000;
-                
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                
-                /* 上からの余白：15vh（ちょうど良かった値） */
-                margin-top: 15vh; 
-                padding: 0;
-            }
-
-            .match-num {
-                font-size: 8vh;
-                /* ✨ 「第1試合」と下のVSエリアの間隔を広げました（3vh → 8vh） */
-                margin-bottom: 8vh; 
-            }
-
-            .teams {
-                padding: 0 3vw;
-                width: 100vw;
-            }
-
-            .vs {
-                font-size: 8vh;
-                padding: 0 3vw;
-            }
-
-            .team-container {
-                width: 40vw;
-            }
-
-            .team-name {
-                white-space: nowrap !important;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <h1>🤾‍♂️ クラブ対戦カード 🤾‍♀️</h1>
-
-    <div class="input-area">
-        <div class="input-group">
-            <label for="matchInput">試合番号:</label>
-            <input type="text" id="matchInput" value="第1試合">
-        </div>
-        <div class="input-group">
-            <label for="teamAInput">チームA:</label>
-            <input type="text" id="teamAInput" placeholder="例: ひまわり">
-        </div>
-        <div class="input-group">
-            <label for="teamBInput">チームB:</label>
-            <input type="text" id="teamBInput" placeholder="例: こすもす">
-        </div>
-
-        <div class="btn-group-sub">
-            <button type="button" class="btn-sub" onclick="incrementMatch()">＋1 試合</button>
-            <button type="button" class="btn-sub" onclick="swapTeams()">⇄ チーム入れ替え</button>
-        </div>
-
-        <button type="button" class="btn-main" onclick="updateCard()">画面を更新する</button>
-    </div>
-
-    <div class="display-area">
-        <div id="matchDisplay" class="match-num">第1試合</div>
-        <div class="teams">
-            <div class="team-container"><div id="teamADisplay" class="team-name">チームA</div></div>
-            <div class="vs">VS</div>
-            <div class="team-container"><div id="teamBDisplay" class="team-name">チームB</div></div>
-        </div>
-    </div>
-
-    <script>
-        // 🔄 画面更新処理
-        function updateCard() {
-            const matchTxt = document.getElementById('matchInput').value;
-            const inputA = document.getElementById('teamAInput').value;
-            const inputB = document.getElementById('teamBInput').value;
-
-            const elMatch =
+                elA.style.fontSize = Math.max(12, sizeA) + 'px';
+                elB.style.fontSize = Math.max(12, sizeB) + 'px';
+            } else {
                 elA.style.fontSize = '';
                 elB.style.fontSize = '';
             }

@@ -5,371 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLUB TAISENCARD</title>
     <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">
-
     <style>
-        :root {
-            --bg-main: #0f172a;
-            --card-bg: #1e293b;
-            --team-a-color: #ff5c6e; /* チームA：赤/ピンク系 */
-            --team-b-color: #38bdf8; /* チームB：青/水色系 */
-            --vs-color: #94a3b8;
-            --match-color: #f59e0b;
-        }
-
-        * { box-sizing: border-box; }
-
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #f0f2f5;
+            color: #333;
             text-align: center;
-            user-select: none;
-            -webkit-user-select: none;
+            box-sizing: border-box;
         }
-
-        h1 { font-size: 22px; color: #f8fafc; margin-bottom: 20px; }
+        h1 { font-size: 20px; color: #1a365d; margin-bottom: 20px; }
         
         /* 📝 入力エリア */
         .input-area {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            max-width: 440px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
             margin: 0 auto 30px auto;
-            border: 1px solid #334155;
         }
-
         .input-group {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-
-        label {
-            font-weight: bold;
-            font-size: 14px;
-            color: #cbd5e1;
-        }
-
+        label { font-weight: bold; font-size: 14px; }
         input {
             width: 65%;
-            padding: 10px;
+            padding: 8px;
             font-size: 16px;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            background-color: #0f172a;
-            color: #ffffff;
-            outline: none;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
         }
-
-        input:focus {
-            border-color: #38bdf8;
-        }
-
-        /* アクションボタン群 */
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
         button {
-            flex: 1;
-            background-color: #2563eb;
+            width: 100%;
+            background-color: #3182ce;
             color: white;
             border: none;
-            padding: 12px 8px;
-            font-size: 15px;
+            padding: 12px;
+            font-size: 16px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-sub {
-            background-color: #475569;
         }
 
         /* 📸 カメラ撮影用の表示エリア */
         .display-area {
-            background-color: #1e293b;
+            background-color: #0f172a;
             color: #ffffff;
-            padding: 30px 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 40px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
             max-width: 500px;
-            margin: 0 auto;
-            border: 1px solid #334155;
+            margin: 0 auto 50px auto;
+            transition: all 0.3s ease;
         }
-
         .match-num {
-            font-size: 28px;
-            color: var(--match-color);
-            font-weight: 800;
+            font-size: 26px;
+            color: #fbd38d;
+            font-weight: bold;
             margin-bottom: 20px;
             letter-spacing: 2px;
-            text-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
         }
-
         .teams {
             display: flex;
             justify-content: space-around;
             align-items: center;
-        }
-
-        .vs {
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--vs-color);
-            padding: 0 10px;
-            flex-shrink: 0;
-            font-style: italic;
-        }
-        
-        .team-container {
-            flex: 1;
-            width: 42%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 1.2em;
-        }
-
-        .team-name {
-            word-break: break-all;
-            line-height: 1.1;
-            display: inline-block;
-            white-space: normal;
-            font-size: 36px;
-            font-weight: 900;
-        }
-
-        /* チームカラー適用 */
-        #teamADisplay {
-            color: var(--team-a-color);
-            text-shadow: 0 0 15px rgba(255, 92, 110, 0.3);
-        }
-
-        #teamBDisplay {
-            color: var(--team-b-color);
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-        }
-
-        /* 🔄 スマホを横向きにしたときの表示（全画面ビジュアル看板） */
-        @media (orientation: landscape) {
-            body {
-                padding: 0;
-                background-color: #000000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                overflow: hidden;
-            }
-
-            h1, .input-area {
-                display: none !important;
-            }
-
-            .display-area {
-                max-width: 100%;
-                width: 100vw;
-                height: 100vh;
-                border-radius: 0;
-                box-shadow: none;
-                border: none;
-                background: #000000;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: 0;
-                margin: 0;
-            }
-
-            .match-num {
-                font-size: 10vh;
-                margin-bottom: 4vh;
-            }
-
-            .teams {
-                padding: 0 3vw;
-                width: 100vw;
-            }
-
-            .vs {
-                font-size: 10vh;
-                padding: 0 3vw;
-            }
-
-            .team-container {
-                width: 40vw;
-            }
-
-            /* ✨ 横画面時は1行固定 & fitTeamNamesでジャストサイズ計算 */
-            .team-name {
-                white-space: nowrap !important;
-                font-size: 15vh;
-            }
-        }
-
-        /* ☕️ 応援ボタン */
-        .bmc-container {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-        }
-
-        .bmc-button {
-            display: inline-block;
-            background-color: #ffdd00;
-            color: #000000;
+            font-size: 42px;
             font-weight: bold;
-            font-size: 13px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            white-space: nowrap;
+            width: 100%;
         }
-
-        @media (orientation: landscape) {
-            .bmc-container {
-                display: none !important;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <h1>🤾‍♂️ クラブ対戦カード 🤾‍♀️</h1>
-
-    <div class="input-area">
-        <div class="input-group">
-            <label for="matchInput">試合名・番号:</label>
-            <input type="text" id="matchInput" value="第1試合">
-        </div>
-        <div class="input-group">
-            <label for="teamAInput">チームA（赤）:</label>
-            <input type="text" id="teamAInput" placeholder="例: ひまわり">
-        </div>
-        <div class="input-group">
-            <label for="teamBInput">チームB（青）:</label>
-            <input type="text" id="teamBInput" placeholder="例: こすもす">
-        </div>
-
-        <div class="btn-group">
-            <button onclick="updateCard()">更新</button>
-            <button class="btn-sub" onclick="swapTeams()" title="左右のチームを入れ替え">⇄ 入替</button>
-            <button class="btn-sub" onclick="nextMatch()" title="試合番号を+1">次試合 (+1)</button>
-        </div>
-    </div>
-
-    <div class="display-area">
-        <div id="matchDisplay" class="match-num">第1試合</div>
-        <div class="teams">
-            <div class="team-container"><div id="teamADisplay" class="team-name">チームA</div></div>
-            <div class="vs">VS</div>
-            <div class="team-container"><div id="teamBDisplay" class="team-name">チームB</div></div>
-        </div>
-    </div>
-
-    <script>
-        function updateCard() {
-            const matchTxt = document.getElementById('matchInput').value;
-            const teamATxt = document.getElementById('teamAInput').value || 'チームA';
-            const teamBTxt = document.getElementById('teamBInput').value || 'チームB';
-
-            document.getElementById('matchDisplay').innerText = matchTxt;
-            
-            const elA = document.getElementById('teamADisplay');
-            const elB = document.getElementById('teamBDisplay');
-            
-            elA.innerText = teamATxt;
-            elB.innerText = teamBTxt;
-
-            fitTeamNames();
-        }
-
-        // 🔄 チームAとチームBを入れ替える（コートチェンジ時）
-        function swapTeams() {
-            const elA = document.getElementById('teamADisplay');
-            const elB = document.getElementById('teamBDisplay');
-            
-            const temp = elA.innerText;
-            elA.innerText = elB.innerText;
-            elB.innerText = temp;
-
-            fitTeamNames();
-        }
-
-        // ➕ 試合番号を「第1試合」→「第2試合」へ1つ進める
-        function nextMatch() {
-            const matchInput = document.getElementById('matchInput');
-            const currentTxt = matchInput.value;
-            
-            // 数字部分を探して+1する正規表現
-            const updatedTxt = currentTxt.replace(/\d+/, match => parseInt(match, 10) + 1);
-            matchInput.value = updatedTxt;
-            
-            document.getElementById('matchDisplay').innerText = updatedTxt;
-        }
-
-        // ✨ 横画面のとき文字が枠からはみ出さないよう自動縮小する処理
-        function fitTeamNames() {
-            const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-            
-            ['teamADisplay', 'teamBDisplay'].forEach(id => {
-                const el = document.getElementById(id);
-                const container = el.parentElement;
-
-                if (isLandscape) {
-                    let fontSize = window.innerHeight * 0.15; // 最大 15vh
-                    el.style.fontSize = fontSize + 'px';
-
-                    while (el.scrollWidth > container.clientWidth && fontSize > 10) {
-                        fontSize -= 1;
-                        el.style.fontSize = fontSize + 'px';
-                    }
-                } else {
-                    el.style.fontSize = '';
-                }
-            });
-        }
-
-        window.addEventListener('resize', fitTeamNames);
-        window.addEventListener('orientationchange', fitTeamNames);
-
-        // 💡 画面自動スリープ防止（Wake Lock API）
-        let wakeLock = null;
-        async function requestWakeLock() {
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            } catch (err) {
-                console.log('Wake Lock Error:', err);
-            }
-        }
-
-        requestWakeLock();
-        document.addEventListener('click', requestWakeLock);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                requestWakeLock();
-            }
-        });
-    </script>
-
-</body>
-</html>
+        .vs {
+            font-size: 24px;
+            color

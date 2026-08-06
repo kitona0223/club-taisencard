@@ -243,4 +243,49 @@
             if (!elA || !elB) return;
 
             if (isLandscape) {
-                // 1. 初期
+                // 1. 初期サイズ設定 (12vh)
+                const initialSize = Math.max(12, window.innerHeight * 0.12);
+                elA.style.fontSize = initialSize + 'px';
+                elB.style.fontSize = initialSize + 'px';
+
+                // 2. それぞれ収まるサイズを計算
+                const sizeA = calculateFitSize(elA);
+                const sizeB = calculateFitSize(elB);
+
+                // 3. 小さい方のサイズを両方に適用して統一
+                let finalSize = Math.min(sizeA, sizeB);
+                if (finalSize < 12) finalSize = 12; // 最小サイズ保護
+
+                elA.style.fontSize = finalSize + 'px';
+                elB.style.fontSize = finalSize + 'px';
+            } else {
+                // 縦画面時は自動CSSに戻す
+                elA.style.fontSize = '';
+                elB.style.fontSize = '';
+            }
+        }
+
+        // 枠内に収めるためのサイズ計算（無限ループ防止策入り）
+        function calculateFitSize(el) {
+            const container = el.parentElement;
+            if (!container || container.clientWidth === 0) return 30;
+
+            let currentSize = parseFloat(window.getComputedStyle(el).fontSize) || 30;
+            let safetyCount = 0; // 無限ループ防止用カウンター
+
+            while (el.scrollWidth > container.clientWidth && currentSize > 10 && safetyCount < 100) {
+                currentSize -= 1;
+                el.style.fontSize = currentSize + 'px';
+                safetyCount++;
+            }
+            return currentSize;
+        }
+
+        // イベント登録
+        window.addEventListener('resize', fitTeamNames);
+        window.addEventListener('orientationchange', fitTeamNames);
+        document.addEventListener('DOMContentLoaded', fitTeamNames);
+    </script>
+
+</body>
+</html>
